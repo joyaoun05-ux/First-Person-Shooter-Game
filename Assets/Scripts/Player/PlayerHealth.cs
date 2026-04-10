@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private AudioClip hurtClip;
     [SerializeField] private AudioClip deathClip;
     [SerializeField] private float hurtSoundCooldown = 0.5f;
+
+    [Header("Damage Feedback")]
+    [SerializeField] private DamageImpulse damageImpulse;
 
     private int currentHealth;
     private bool isDead = false;
@@ -49,6 +53,11 @@ public class PlayerHealth : MonoBehaviour
             }
         }
 
+        if (damageImpulse != null)
+        {
+            damageImpulse.PlayImpulse();
+        }
+
         if (currentHealth <= 0)
         {
             Die();
@@ -69,6 +78,8 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
+        if (isDead) return;
+
         isDead = true;
         Debug.Log("Player died");
 
@@ -86,7 +97,7 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    private System.Collections.IEnumerator DieRoutine()
+    private IEnumerator DieRoutine()
     {
         yield return new WaitForSeconds(0.5f);
 
