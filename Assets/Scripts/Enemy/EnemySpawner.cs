@@ -6,6 +6,7 @@ public class EnemySpawner : MonoBehaviour
 {
     [Header("Pool Settings")]
     [SerializeField] private EnemyHealth enemyPrefab;
+    [SerializeField] private EnemyDamage enemyDamagePrefab;
     [SerializeField] private int prewarmCount = 5;
 
     [Header("Spawn Points")]
@@ -105,6 +106,12 @@ public class EnemySpawner : MonoBehaviour
         EnemyHealth enemy = pool.Get(point.position, point.rotation);
 
         enemy.SetWaveDifficulty(currentWave);
+
+        EnemyDamage enemyDamage = enemy.GetComponent<EnemyDamage>();
+        if (enemyDamage != null)
+        {
+            enemyDamage.SetWaveDamage(currentWave);
+        }
 
         enemy.OnDied -= HandleEnemyDied;
         enemy.OnDied += HandleEnemyDied;

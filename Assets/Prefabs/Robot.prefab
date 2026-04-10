@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 8844795180429347225}
   - component: {fileID: 631630403726190196}
   - component: {fileID: 8169797547636880609}
+  - component: {fileID: 4687612240151094747}
   m_Layer: 0
   m_Name: Robot
   m_TagString: Untagged
@@ -82,7 +83,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 3.5
+  m_StoppingDistance: 1.5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -117,12 +118,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.2164841, y: 1, z: 1.3128712}
+  m_Center: {x: -0.0047888756, y: 0, z: 0.06160447}
 --- !u!114 &8169797547636880609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,6 +137,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   startingHealth: 5
+  scoreValue: 10
+  cashValue: 50
+--- !u!114 &4687612240151094747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3920701221612885935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 383c6d3428196fb4cb8f7e3a2610c30c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDamage
+  baseDamage: 10
+  attackCooldown: 1
 --- !u!1001 &5600423223058343264
 PrefabInstance:
   m_ObjectHideFlags: 0
