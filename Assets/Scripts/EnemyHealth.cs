@@ -5,6 +5,7 @@ public class EnemyHealth : MonoBehaviour, IPoolable
 {
     [SerializeField] private int startingHealth = 6;
     [SerializeField] private int scoreValue = 10;
+    [SerializeField] private int cashValue = 50;
 
     private int currentHealth;
     private int bonusHealth = 0;
@@ -40,6 +41,12 @@ public class EnemyHealth : MonoBehaviour, IPoolable
         {
             ScoreManager.Instance.AddScore(scoreValue);
         }
+
+        if (CashManager.Instance != null)
+        {
+            CashManager.Instance.AddCash(cashValue);
+        }
+
         OnDied?.Invoke(this);
     }
 

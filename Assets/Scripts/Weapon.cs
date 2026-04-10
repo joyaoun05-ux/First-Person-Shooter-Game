@@ -19,7 +19,8 @@ public class Weapon : MonoBehaviour
         impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 
-    public void Shoot() {
+    public void Shoot()
+    {
 
         if (!HasAmmo) return;
 
