@@ -3,6 +3,16 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour, IPoolable
 {
+    public enum EnemyType
+    {
+        Normal,
+        Healer
+    }
+
+    [Header("Type")]
+    [SerializeField] private EnemyType enemyType = EnemyType.Normal;
+    public EnemyType Type => enemyType;
+
     [Header("Stats")]
     [SerializeField] private int startingHealth = 6;
     [SerializeField] private int scoreValue = 10;
@@ -10,6 +20,10 @@ public class EnemyHealth : MonoBehaviour, IPoolable
 
     [Header("Death VFX")]
     [SerializeField] private GameObject deathVFXPrefab;
+
+    [Header("Heal On Death")]
+    [SerializeField] private bool healPlayerOnDeath = false;
+    [SerializeField] private int healAmountOnDeath = 20;
 
     private int currentHealth;
     private int bonusHealth = 0;
@@ -42,22 +56,28 @@ public class EnemyHealth : MonoBehaviour, IPoolable
 
     private void Die()
     {
-        // Spawn death VFX
         if (deathVFXPrefab != null)
         {
             Instantiate(deathVFXPrefab, transform.position, Quaternion.identity);
         }
 
-        // Score
         if (ScoreManager.Instance != null)
         {
             ScoreManager.Instance.AddScore(scoreValue);
         }
 
-        // Cash
         if (CashManager.Instance != null)
         {
             CashManager.Instance.AddCash(cashValue);
+        }
+
+        if (healPlayerOnDeath)
+        {
+            PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.Heal(healAmountOnDeath);
+            }
         }
 
         OnDied?.Invoke(this);

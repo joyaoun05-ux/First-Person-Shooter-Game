@@ -149,10 +149,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b79c2dc2d8ed754479e3d694775eeab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  enemyType: 0
   startingHealth: 3
   scoreValue: 10
   cashValue: 50
   deathVFXPrefab: {fileID: 0}
+  healPlayerOnDeath: 0
+  healAmountOnDeath: 20
 --- !u!4 &49500337
 Transform:
   m_ObjectHideFlags: 0
@@ -1360,7 +1363,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6237716487632107274, guid: 57b71948363a37a47ad70cc6fcecf634, type: 3}
       propertyPath: m_StoppingDistance
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2991,6 +2994,71 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 882912728}
   m_CullTransparentMesh: 1
+--- !u!1001 &900556397
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1953615601}
+    m_Modifications:
+    - target: {fileID: 3692658917957001501, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -15.37456
+      objectReference: {fileID: 0}
+    - target: {fileID: 3692658917957001501, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.32048
+      objectReference: {fileID: 0}
+    - target: {fileID: 3692658917957001501, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -14.01535
+      objectReference: {fileID: 0}
+    - target: {fileID: 3692658917957001501, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3692658917957001501, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3692658917957001501, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3692658917957001501, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3692658917957001501, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3692658917957001501, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3692658917957001501, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3920701221612885935, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: m_Name
+      value: HealingRobot
+      objectReference: {fileID: 0}
+    - target: {fileID: 3920701221612885935, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8169797547636880609, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: healPlayerOnDeath
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
 --- !u!1 &918487504 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9005220659476430823, guid: 2d3a85ecde41a8246a79669975912b74, type: 3}
@@ -4015,8 +4083,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7f6b96218c934675bbe8365ae670c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  enemyPrefab: {fileID: 8169797547636880609, guid: 57b71948363a37a47ad70cc6fcecf634, type: 3}
-  prewarmCount: 5
+  normalEnemyPrefab: {fileID: 1321499831}
+  healerEnemyPrefab: {fileID: 1750421208}
+  normalPrewarmCount: 10
+  healerPrewarmCount: 3
   spawnPoints:
   - {fileID: 740741210}
   waveText: {fileID: 1267112038}
@@ -4027,6 +4097,8 @@ MonoBehaviour:
   startingEnemiesPerWave: 6
   extraEnemiesPerWave: 3
   maxActiveEnemies: 10
+  firstHealerWave: 2
+  healerSpawnChance: 0.1
   currentWave: 0
 --- !u!4 &1258770036
 Transform:
@@ -6866,6 +6938,17 @@ Transform:
   - {fileID: 3630731551019638858}
   m_Father: {fileID: 49500337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1321499831 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8169797547636880609, guid: 57b71948363a37a47ad70cc6fcecf634, type: 3}
+  m_PrefabInstance: {fileID: 2428075993544400757}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b79c2dc2d8ed754479e3d694775eeab9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
 --- !u!43 &1375733060
 Mesh:
   m_ObjectHideFlags: 0
@@ -8270,6 +8353,22 @@ Transform:
   - {fileID: 1650442574}
   m_Father: {fileID: 1222128442}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1750421206 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3692658917957001501, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+  m_PrefabInstance: {fileID: 900556397}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1750421208 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8169797547636880609, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+  m_PrefabInstance: {fileID: 900556397}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b79c2dc2d8ed754479e3d694775eeab9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
 --- !u!1 &1804311479
 GameObject:
   m_ObjectHideFlags: 0
@@ -8669,6 +8768,7 @@ Transform:
   - {fileID: 1092870409}
   - {fileID: 574596067}
   - {fileID: 2019126402}
+  - {fileID: 1750421206}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1965961801
@@ -9287,6 +9387,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthStation
   cost: 150
+  priceIncreasePerUse: 50
+  maxCost: 500
   healAmount: 50
   interactText: {fileID: 1214458790}
   healSound: {fileID: 2098212067}
@@ -9371,7 +9473,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 631630403726190196, guid: 57b71948363a37a47ad70cc6fcecf634, type: 3}
       propertyPath: m_IsTrigger
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3692658917957001501, guid: 57b71948363a37a47ad70cc6fcecf634, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9427,7 +9529,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6237716487632107274, guid: 57b71948363a37a47ad70cc6fcecf634, type: 3}
       propertyPath: m_StoppingDistance
-      value: 3.5
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8169797547636880609, guid: 57b71948363a37a47ad70cc6fcecf634, type: 3}
       propertyPath: deathVFXPrefab
