@@ -6,6 +6,8 @@ public class HealthStation : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private int cost = 150;
+    [SerializeField] private int priceIncreasePerUse = 25;
+    [SerializeField] private int maxCost = 500;
     [SerializeField] private int healAmount = 40;
     [SerializeField] private TMP_Text interactText;
     [SerializeField] private AudioSource healSound;
@@ -48,16 +50,41 @@ public class HealthStation : MonoBehaviour
         {
             if (interactText != null)
                 interactText.text = "Not enough cash!";
+            CancelInvoke(nameof(ResetInteractText));
+            Invoke(nameof(ResetInteractText), 1f);
             return;
         }
 
         playerHealth.Heal(healAmount);
+
+        IncreaseCost();
 
         if (interactText != null)
             interactText.text = "Health restored!";
 
         if (healSound != null)
             healSound.Play();
+
+        CancelInvoke(nameof(ResetInteractText));
+        Invoke(nameof(ResetInteractText), 1f);
+    }
+
+    private void IncreaseCost()
+    {
+        cost += priceIncreasePerUse;
+
+        if (cost > maxCost)
+            cost = maxCost;
+
+        Debug.Log("Health station new cost: " + cost);
+    }
+
+    private void ResetInteractText()
+    {
+        if (playerInRange && interactText != null)
+        {
+            interactText.text = "Press E to heal ($" + cost + ")";
+        }
     }
 
     private void OnTriggerEnter(Collider other)
