@@ -14,6 +14,7 @@ public class ActiveWeapon : MonoBehaviour
 
     private InputAction shootAction;
     private FirstPersonController controller;
+    private PlayerBuffs playerBuffs;
 
     private const string SHOOT_ANIMATION_TRIGGER = "Shoot";
     private float nextFireTime = 0f;
@@ -26,6 +27,7 @@ public class ActiveWeapon : MonoBehaviour
         inputs = GetComponentInParent<StarterAssetsInputs>();
         shootAction = GetComponentInParent<PlayerInput>().actions["Shoot"];
         controller = GetComponentInParent<FirstPersonController>();
+        playerBuffs = GetComponentInParent<PlayerBuffs>();
 
         if (hitMarkerUI == null)
         {
@@ -43,9 +45,7 @@ public class ActiveWeapon : MonoBehaviour
         bool canFire = Time.time >= nextFireTime;
 
         if (!canFire || currentWeapon == null || !currentWeapon.HasAmmo)
-        {
             return;
-        }
 
         if (weaponData.isAutomatic)
         {
@@ -72,7 +72,14 @@ public class ActiveWeapon : MonoBehaviour
 
             if (health != null)
             {
-                bool wasKill = health.TakeDamage(weaponData.damage);
+                int finalDamage = weaponData.damage;
+
+                if (playerBuffs != null)
+                {
+                    finalDamage += playerBuffs.GetDamageBonus();
+                }
+
+                bool wasKill = health.TakeDamage(finalDamage);
 
                 if (hitMarkerUI != null)
                 {

@@ -40,9 +40,7 @@ public class PlayerHealth : MonoBehaviour
         UpdateHealthUI();
 
         if (damageFlashUI != null)
-        {
             damageFlashUI.ShowDamageFlash();
-        }
 
         if (audioSource != null && hurtClip != null)
         {
@@ -54,14 +52,10 @@ public class PlayerHealth : MonoBehaviour
         }
 
         if (damageImpulse != null)
-        {
             damageImpulse.PlayImpulse();
-        }
 
         if (currentHealth <= 0)
-        {
             Die();
-        }
     }
 
     public void Heal(int amount)
@@ -74,6 +68,34 @@ public class PlayerHealth : MonoBehaviour
             currentHealth = maxHealth;
 
         UpdateHealthUI();
+    }
+
+    public void IncreaseMaxHealth(int amount, bool alsoHealToFull = true)
+    {
+        if (isDead) return;
+
+        maxHealth += amount;
+
+        if (alsoHealToFull)
+        {
+            currentHealth = maxHealth;
+        }
+        else if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        UpdateHealthUI();
+    }
+
+    public int GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+
+    public int GetMaxHealth()
+    {
+        return maxHealth;
     }
 
     private void Die()
@@ -91,9 +113,7 @@ public class PlayerHealth : MonoBehaviour
         else
         {
             if (GameManager.Instance != null)
-            {
                 GameManager.Instance.GameOver();
-            }
         }
     }
 
@@ -102,16 +122,14 @@ public class PlayerHealth : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         if (GameManager.Instance != null)
-        {
             GameManager.Instance.GameOver();
-        }
     }
 
     private void UpdateHealthUI()
     {
         if (healthText != null)
         {
-            healthText.text = "Health: " + currentHealth;
+            healthText.text = "Health: " + currentHealth + "/" + maxHealth;
         }
     }
 }
