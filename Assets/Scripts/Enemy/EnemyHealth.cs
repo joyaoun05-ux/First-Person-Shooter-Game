@@ -17,14 +17,17 @@ public class EnemyHealth : MonoBehaviour, IPoolable
         currentHealth = startingHealth;
     }
 
-    public void TakeDamage(int damage)
+    public bool TakeDamage(int damage)
     {
         currentHealth -= damage;
 
         if (currentHealth <= 0)
         {
             Die();
+            return true;
         }
+
+        return false;
     }
 
     public void SetWaveDifficulty(int waveNumber)

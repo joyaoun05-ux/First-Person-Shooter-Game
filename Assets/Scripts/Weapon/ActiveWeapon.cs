@@ -1,44 +1,52 @@
 using StarterAssets;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Windows;
 
 public class ActiveWeapon : MonoBehaviour
 {
-
-    [SerializeField] WeaponData weaponData;
+    [SerializeField] private WeaponData weaponData;
     private Weapon currentWeapon;
-    StarterAssetsInputs inputs;
-    [SerializeField] Animator animator;
+
+    private StarterAssetsInputs inputs;
+    [SerializeField] private Animator animator;
     [SerializeField] private GameObject hitFXPrefab;
-    InputAction shootAction;
+    [SerializeField] private HitMarkerUI hitMarkerUI;
 
-    FirstPersonController controller;
+    private InputAction shootAction;
+    private FirstPersonController controller;
 
-    const string SHOOT_ANIMATION_TRIGGER = "Shoot";
-    float nextFireTime = 0f;
+    private const string SHOOT_ANIMATION_TRIGGER = "Shoot";
+    private float nextFireTime = 0f;
 
     public Weapon CurrentWeapon => currentWeapon;
 
     private void Awake()
     {
-       currentWeapon = null;
-       inputs = GetComponentInParent<StarterAssetsInputs>();
-       shootAction = GetComponentInParent<PlayerInput>().actions["Shoot"];
-       controller = GetComponentInParent<FirstPersonController>();
+        currentWeapon = null;
+        inputs = GetComponentInParent<StarterAssetsInputs>();
+        shootAction = GetComponentInParent<PlayerInput>().actions["Shoot"];
+        controller = GetComponentInParent<FirstPersonController>();
+
+        if (hitMarkerUI == null)
+        {
+            hitMarkerUI = FindObjectOfType<HitMarkerUI>(true);
+        }
     }
 
     private void Update()
     {
         HandleShoot();
     }
+
     private void HandleShoot()
     {
         bool canFire = Time.time >= nextFireTime;
 
-        if (!canFire || currentWeapon == null ||!currentWeapon.HasAmmo) {
+        if (!canFire || currentWeapon == null || !currentWeapon.HasAmmo)
+        {
             return;
         }
+
         if (weaponData.isAutomatic)
         {
             if (!shootAction.IsPressed()) return;
@@ -50,27 +58,46 @@ public class ActiveWeapon : MonoBehaviour
         }
 
         nextFireTime = Time.time + (1.0f / weaponData.fireRate);
+
         animator.Play(SHOOT_ANIMATION_TRIGGER, 0, 0f);
         currentWeapon.Shoot();
-        RaycastHit hit;
 
         float yawKick = Random.Range(-weaponData.recoilX, weaponData.recoilX);
         controller.ApplyRecoil(weaponData.recoilY, yawKick);
 
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward,
-            out hit, weaponData.range))
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponData.range))
         {
-            EnemyHealth health = hit.collider.GetComponent<EnemyHealth>();
-            health?.TakeDamage(weaponData.damage);
-            Instantiate(weaponData.hitVFXPrefab, hit.point, Quaternion.identity);
+            EnemyHealth health = hit.collider.GetComponentInParent<EnemyHealth>();
+
+            if (health != null)
+            {
+                bool wasKill = health.TakeDamage(weaponData.damage);
+
+                if (hitMarkerUI != null)
+                {
+                    hitMarkerUI.ShowHitMarker(wasKill);
+                }
+            }
+
+            if (weaponData.hitVFXPrefab != null)
+            {
+                Instantiate(weaponData.hitVFXPrefab, hit.point, Quaternion.identity);
+            }
+            else if (hitFXPrefab != null)
+            {
+                Instantiate(hitFXPrefab, hit.point, Quaternion.identity);
+            }
         }
     }
 
-    public void SwitchWeapon(Weapon newWeapon) { 
+    public void SwitchWeapon(Weapon newWeapon)
+    {
         if (newWeapon == null) return;
+
         currentWeapon = newWeapon;
         weaponData = newWeapon.Data;
-        nextFireTime = 0;
+        nextFireTime = 0f;
         inputs.ShootInput(false);
     }
 }
