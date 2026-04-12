@@ -248,6 +248,7 @@ MonoBehaviour:
   startingHealth: 3
   scoreValue: 10
   cashValue: 50
+  deathVFXPrefab: {fileID: 0}
 --- !u!4 &49500337
 Transform:
   m_ObjectHideFlags: 0
@@ -3835,7 +3836,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyPrefab: {fileID: 8169797547636880609, guid: 57b71948363a37a47ad70cc6fcecf634, type: 3}
-  enemyDamagePrefab: {fileID: 4687612240151094747, guid: 57b71948363a37a47ad70cc6fcecf634, type: 3}
   prewarmCount: 5
   spawnPoints:
   - {fileID: 740741210}
@@ -8803,6 +8803,10 @@ PrefabInstance:
       propertyPath: m_StoppingDistance
       value: 3.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8169797547636880609, guid: 57b71948363a37a47ad70cc6fcecf634, type: 3}
+      propertyPath: deathVFXPrefab
+      value: 
+      objectReference: {fileID: 2595673145476948650, guid: 439f974e3c0199d45b7e143749bc45be, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -6,7 +6,6 @@ public class EnemySpawner : MonoBehaviour
 {
     [Header("Pool Settings")]
     [SerializeField] private EnemyHealth enemyPrefab;
-    [SerializeField] private EnemyDamage enemyDamagePrefab;
     [SerializeField] private int prewarmCount = 5;
 
     [Header("Spawn Points")]
@@ -107,7 +106,7 @@ public class EnemySpawner : MonoBehaviour
 
         enemy.SetWaveDifficulty(currentWave);
 
-        EnemyDamage enemyDamage = enemy.GetComponent<EnemyDamage>();
+        EnemyDamage enemyDamage = enemy.GetComponentInChildren<EnemyDamage>();
         if (enemyDamage != null)
         {
             enemyDamage.SetWaveDamage(currentWave);

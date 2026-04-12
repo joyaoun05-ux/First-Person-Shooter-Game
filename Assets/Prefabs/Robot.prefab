@@ -139,6 +139,7 @@ MonoBehaviour:
   startingHealth: 5
   scoreValue: 10
   cashValue: 50
+  deathVFXPrefab: {fileID: 2595673145476948650, guid: 439f974e3c0199d45b7e143749bc45be, type: 3}
 --- !u!114 &4687612240151094747
 MonoBehaviour:
   m_ObjectHideFlags: 0
