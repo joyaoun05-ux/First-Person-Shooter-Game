@@ -12,6 +12,12 @@ public class MysteryBox : MonoBehaviour
     [SerializeField] private TMP_Text interactText;
     [SerializeField] private float openDelay = 1.0f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource boxSound;
+    [SerializeField] private AudioSource errorAudioSource;
+    [SerializeField] private AudioClip errorSound;
+    [SerializeField] private float boxSoundDuration = 1.0f; // how long box sound plays
+
     [Header("Weapon Rewards")]
     [SerializeField] private WeaponSwitcher weaponSwitcher;
     [SerializeField] private WeaponData[] possibleWeapons;
@@ -76,20 +82,28 @@ public class MysteryBox : MonoBehaviour
             yield break;
         }
 
-        if (rewardWeights == null || rewardWeights.Length != possibleWeapons.Length)
-        {
-            Debug.LogWarning("RewardWeights size does not match PossibleWeapons size. Using equal weights.");
-        }
-
         if (!CashManager.Instance.SpendCash(cost))
         {
             if (interactText != null)
                 interactText.text = "Not enough cash!";
+
+            if (errorAudioSource != null && errorSound != null)
+            {
+                errorAudioSource.PlayOneShot(errorSound);
+            }
+
             yield return new WaitForSeconds(1f);
             yield break;
         }
 
         isRolling = true;
+
+        //  PLAY BOX SOUND (SHORTENED)
+        if (boxSound != null)
+        {
+            boxSound.Play();
+            StartCoroutine(StopBoxSoundAfterTime(boxSoundDuration));
+        }
 
         if (interactText != null)
             interactText.text = "Rolling mystery box...";
@@ -106,8 +120,6 @@ public class MysteryBox : MonoBehaviour
             yield break;
         }
 
-        Debug.Log("Mystery box selected: " + selectedWeaponData.name);
-
         weaponSwitcher.SwitchToWeaponData(selectedWeaponData);
         lastRewardIndex = selectedIndex;
 
@@ -122,14 +134,23 @@ public class MysteryBox : MonoBehaviour
         UpdateInteractText();
     }
 
+    //  STOP SOUND AFTER SHORT TIME
+    private IEnumerator StopBoxSoundAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        if (boxSound != null && boxSound.isPlaying)
+        {
+            boxSound.Stop();
+        }
+    }
+
     private void IncreaseCost()
     {
         cost += priceIncreasePerUse;
 
         if (cost > maxCost)
             cost = maxCost;
-
-        Debug.Log("Mystery box new cost: " + cost);
     }
 
     private int GetWeightedRandomWeaponIndex()
