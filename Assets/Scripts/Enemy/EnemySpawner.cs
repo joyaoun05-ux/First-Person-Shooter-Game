@@ -7,8 +7,10 @@ public class EnemySpawner : MonoBehaviour
     [Header("Pool Settings")]
     [SerializeField] private EnemyHealth normalEnemyPrefab;
     [SerializeField] private EnemyHealth healerEnemyPrefab;
+    [SerializeField] private EnemyHealth tankEnemyPrefab;
     [SerializeField] private int normalPrewarmCount = 10;
     [SerializeField] private int healerPrewarmCount = 3;
+    [SerializeField] private int tankPrewarmCount = 3;
 
     [Header("Spawn Points")]
     [SerializeField] private Transform[] spawnPoints;
@@ -29,10 +31,15 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private int firstHealerWave = 2;
     [SerializeField] private float healerSpawnChance = 0.15f;
 
+    [Header("Tank Enemy Settings")]
+    [SerializeField] private int firstTankWave = 3;
+    [SerializeField] private float tankSpawnChance = 0.10f;
+
     public int currentWave = 0;
 
     private ObjectPool<EnemyHealth> normalPool;
     private ObjectPool<EnemyHealth> healerPool;
+    private ObjectPool<EnemyHealth> tankPool;
 
     private int enemiesToSpawnThisWave;
     private int enemiesSpawnedThisWave;
@@ -44,6 +51,7 @@ public class EnemySpawner : MonoBehaviour
     {
         normalPool = new ObjectPool<EnemyHealth>(normalEnemyPrefab, transform, normalPrewarmCount);
         healerPool = new ObjectPool<EnemyHealth>(healerEnemyPrefab, transform, healerPrewarmCount);
+        tankPool = new ObjectPool<EnemyHealth>(tankEnemyPrefab, transform, tankPrewarmCount);
 
         if (waveText != null)
             waveText.text = "Wave: 0";
@@ -101,7 +109,7 @@ public class EnemySpawner : MonoBehaviour
 
     private int GetTotalActiveEnemies()
     {
-        return normalPool.CountActive + healerPool.CountActive;
+        return normalPool.CountActive + healerPool.CountActive + tankPool.CountActive;
     }
 
     private void SpawnEnemy()
@@ -110,9 +118,15 @@ public class EnemySpawner : MonoBehaviour
         EnemyHealth enemy;
 
         bool canSpawnHealer = currentWave >= firstHealerWave;
-        bool spawnHealer = canSpawnHealer && Random.value < healerSpawnChance;
+        bool canSpawnTank = currentWave >= firstTankWave;
 
-        if (spawnHealer)
+        float randomValue = Random.value;
+
+        if (canSpawnTank && randomValue < tankSpawnChance)
+        {
+            enemy = tankPool.Get(point.position, point.rotation);
+        }
+        else if (canSpawnHealer && randomValue < tankSpawnChance + healerSpawnChance)
         {
             enemy = healerPool.Get(point.position, point.rotation);
         }
@@ -141,6 +155,10 @@ public class EnemySpawner : MonoBehaviour
         if (enemy.Type == EnemyHealth.EnemyType.Healer)
         {
             healerPool.Return(enemy);
+        }
+        else if (enemy.Type == EnemyHealth.EnemyType.Tank)
+        {
+            tankPool.Return(enemy);
         }
         else
         {

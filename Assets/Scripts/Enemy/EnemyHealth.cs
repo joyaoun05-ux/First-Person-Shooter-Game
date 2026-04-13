@@ -6,7 +6,8 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     public enum EnemyType
     {
         Normal,
-        Healer
+        Healer,
+        Tank
     }
 
     [Header("Type")]
