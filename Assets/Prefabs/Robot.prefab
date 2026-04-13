@@ -145,6 +145,8 @@ MonoBehaviour:
   deathVolume: 1
   healPlayerOnDeath: 0
   healAmountOnDeath: 20
+  hasShield: 0
+  frontDamageMultiplier: 0.3
 --- !u!114 &4687612240151094747
 MonoBehaviour:
   m_ObjectHideFlags: 0

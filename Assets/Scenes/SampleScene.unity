@@ -153,13 +153,13 @@ MonoBehaviour:
   startingHealth: 3
   scoreValue: 10
   cashValue: 50
-  hasShield: 0
-  frontDamageMultiplier: 0.3
   deathVFXPrefab: {fileID: 0}
   deathSound: {fileID: 0}
   deathVolume: 1
   healPlayerOnDeath: 0
   healAmountOnDeath: 20
+  hasShield: 0
+  frontDamageMultiplier: 0.3
 --- !u!4 &49500337
 Transform:
   m_ObjectHideFlags: 0
@@ -3552,6 +3552,10 @@ PrefabInstance:
     - target: {fileID: 3920701221612885935, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8169797547636880609, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
+      propertyPath: cashValue
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8169797547636880609, guid: 6ce17bce53b1d2144b52976b24a4a6e9, type: 3}
       propertyPath: healPlayerOnDeath

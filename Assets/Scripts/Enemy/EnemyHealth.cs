@@ -20,10 +20,6 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     [SerializeField] private int scoreValue = 10;
     [SerializeField] private int cashValue = 50;
 
-    [Header("Shield Settings")]
-    [SerializeField] private bool hasShield = false;
-    [SerializeField] private float frontDamageMultiplier = 0.3f; // 30% damage from front
-
     [Header("Death VFX")]
     [SerializeField] private GameObject deathVFXPrefab;
 
@@ -35,8 +31,13 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     [SerializeField] private bool healPlayerOnDeath = false;
     [SerializeField] private int healAmountOnDeath = 20;
 
+    [Header("Shield Settings")]
+    [SerializeField] private bool hasShield = false;
+    [SerializeField] private float frontDamageMultiplier = 0.3f;
+
     private int currentHealth;
     private int bonusHealth = 0;
+    private bool isDead = false;
 
     public event Action<EnemyHealth> OnDied;
 
@@ -47,11 +48,12 @@ public class EnemyHealth : MonoBehaviour, IPoolable
 
     public bool TakeDamage(int damage, Vector3 hitDirection)
     {
+        if (isDead) return false;
+
         if (hasShield)
         {
             float dot = Vector3.Dot(transform.forward, -hitDirection.normalized);
 
-            // if hit from front
             if (dot > 0.5f)
             {
                 damage = Mathf.RoundToInt(damage * frontDamageMultiplier);
@@ -73,10 +75,14 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     {
         bonusHealth = (waveNumber - 1) * 2;
         currentHealth = startingHealth + bonusHealth;
+        isDead = false;
     }
 
     private void Die()
     {
+        if (isDead) return;
+        isDead = true;
+
         if (deathVFXPrefab != null)
         {
             Instantiate(deathVFXPrefab, transform.position, Quaternion.identity);
@@ -112,10 +118,12 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     public void OnGetFromPool()
     {
         currentHealth = startingHealth + bonusHealth;
+        isDead = false;
     }
 
     public void OnReturnFromPool()
     {
         OnDied = null;
+        isDead = false;
     }
 }

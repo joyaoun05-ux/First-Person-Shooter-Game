@@ -139,12 +139,14 @@ MonoBehaviour:
   enemyType: 0
   startingHealth: 25
   scoreValue: 10
-  cashValue: 50
+  cashValue: 70
   deathVFXPrefab: {fileID: 2595673145476948650, guid: 439f974e3c0199d45b7e143749bc45be, type: 3}
   deathSound: {fileID: 8300000, guid: f05a64800499ea145b03f43b341808e0, type: 3}
   deathVolume: 1
   healPlayerOnDeath: 0
   healAmountOnDeath: 20
+  hasShield: 0
+  frontDamageMultiplier: 0.3
 --- !u!114 &4687612240151094747
 MonoBehaviour:
   m_ObjectHideFlags: 0
