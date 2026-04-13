@@ -4,11 +4,15 @@ using Cinemachine;
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] WeaponData weaponData;
-    [SerializeField] ParticleSystem muzzleFlash;
+    [SerializeField] private WeaponData weaponData;
+    [SerializeField] private ParticleSystem muzzleFlash;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip reloadSound;
+
     private CinemachineImpulseSource impulseSource;
 
-    int currentAmmo;
+    private int currentAmmo;
+
     public int CurrentAmmo => currentAmmo;
     public bool HasAmmo => currentAmmo > 0;
     public WeaponData Data => weaponData;
@@ -21,19 +25,24 @@ public class Weapon : MonoBehaviour
 
     public void Shoot()
     {
-
         if (!HasAmmo) return;
 
         currentAmmo--;
-        muzzleFlash.Play();
-        impulseSource.GenerateImpulse();
-        Debug.Log(impulseSource);
 
+        if (muzzleFlash != null)
+            muzzleFlash.Play();
+
+        if (impulseSource != null)
+            impulseSource.GenerateImpulse();
     }
 
     public void RefillAmmo()
     {
         currentAmmo = weaponData.maxAmmo;
-    }
 
+        if (audioSource != null && reloadSound != null)
+        {
+            audioSource.PlayOneShot(reloadSound);
+        }
+    }
 }

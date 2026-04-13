@@ -21,6 +21,10 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     [Header("Death VFX")]
     [SerializeField] private GameObject deathVFXPrefab;
 
+    [Header("Death Audio")]
+    [SerializeField] private AudioClip deathSound;
+    [SerializeField] private float deathVolume = 1f;
+
     [Header("Heal On Death")]
     [SerializeField] private bool healPlayerOnDeath = false;
     [SerializeField] private int healAmountOnDeath = 20;
@@ -59,6 +63,11 @@ public class EnemyHealth : MonoBehaviour, IPoolable
         if (deathVFXPrefab != null)
         {
             Instantiate(deathVFXPrefab, transform.position, Quaternion.identity);
+        }
+
+        if (deathSound != null)
+        {
+            AudioSource.PlayClipAtPoint(deathSound, transform.position, deathVolume);
         }
 
         if (ScoreManager.Instance != null)
