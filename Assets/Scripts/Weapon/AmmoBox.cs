@@ -8,6 +8,8 @@ public class AmmoBox : MonoBehaviour
     [SerializeField] private int cost = 100;
     [SerializeField] private TMP_Text interactText;
     [SerializeField] private AudioSource pickupSound;
+    [SerializeField] private AudioSource errorAudioSource;
+    [SerializeField] private AudioClip errorSound;
     [SerializeField] private float rotateSpeed = 60f;
     [SerializeField] private float floatSpeed = 2f;
     [SerializeField] private float floatHeight = 0.2f;
@@ -53,6 +55,12 @@ public class AmmoBox : MonoBehaviour
         {
             if (interactText != null)
                 interactText.text = "Not enough cash!";
+
+            if (errorAudioSource != null && errorSound != null)
+            {
+                errorAudioSource.PlayOneShot(errorSound);
+            }
+
             return;
         }
 
