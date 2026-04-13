@@ -23,6 +23,8 @@ public class PerkStation : MonoBehaviour
     [Header("UI / Audio")]
     [SerializeField] private TMP_Text interactText;
     [SerializeField] private AudioSource perkSound;
+    [SerializeField] private AudioSource errorAudioSource;
+    [SerializeField] private AudioClip errorSound;
     [SerializeField] private float useCooldown = 1.5f;
 
     private bool playerInRange = false;
@@ -60,6 +62,7 @@ public class PerkStation : MonoBehaviour
         {
             if (interactText != null)
                 interactText.text = perkType + " Perk unlocks at Wave " + unlockWave;
+
             CancelInvoke(nameof(ResetInteractText));
             Invoke(nameof(ResetInteractText), 1f);
             return;
@@ -78,6 +81,12 @@ public class PerkStation : MonoBehaviour
         {
             if (interactText != null)
                 interactText.text = "Not enough cash!";
+
+            if (errorAudioSource != null && errorSound != null)
+            {
+                errorAudioSource.PlayOneShot(errorSound);
+            }
+
             CancelInvoke(nameof(ResetInteractText));
             Invoke(nameof(ResetInteractText), 1f);
             return;
