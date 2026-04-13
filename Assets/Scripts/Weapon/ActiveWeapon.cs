@@ -49,17 +49,24 @@ public class ActiveWeapon : MonoBehaviour
 
         if (weaponData.isAutomatic)
         {
-            if (!shootAction.IsPressed()) return;
+            if (!shootAction.IsPressed())
+                return;
         }
         else
         {
-            if (!inputs.shoot) return;
+            if (!inputs.shoot)
+                return;
+
             inputs.ShootInput(false);
         }
 
         nextFireTime = Time.time + (1.0f / weaponData.fireRate);
 
-        animator.Play(SHOOT_ANIMATION_TRIGGER, 0, 0f);
+        if (animator != null)
+        {
+            animator.Play(SHOOT_ANIMATION_TRIGGER, 0, 0f);
+        }
+
         currentWeapon.Shoot();
 
         float yawKick = Random.Range(-weaponData.recoilX, weaponData.recoilX);
@@ -79,7 +86,9 @@ public class ActiveWeapon : MonoBehaviour
                     finalDamage += playerBuffs.GetDamageBonus();
                 }
 
-                bool wasKill = health.TakeDamage(finalDamage);
+                Vector3 hitDirection = (health.transform.position - Camera.main.transform.position).normalized;
+
+                bool wasKill = health.TakeDamage(finalDamage, hitDirection);
 
                 if (hitMarkerUI != null)
                 {
@@ -100,7 +109,8 @@ public class ActiveWeapon : MonoBehaviour
 
     public void SwitchWeapon(Weapon newWeapon)
     {
-        if (newWeapon == null) return;
+        if (newWeapon == null)
+            return;
 
         currentWeapon = newWeapon;
         weaponData = newWeapon.Data;

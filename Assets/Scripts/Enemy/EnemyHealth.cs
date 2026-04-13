@@ -7,7 +7,8 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     {
         Normal,
         Healer,
-        Tank
+        Tank,
+        Shield
     }
 
     [Header("Type")]
@@ -18,6 +19,10 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     [SerializeField] private int startingHealth = 6;
     [SerializeField] private int scoreValue = 10;
     [SerializeField] private int cashValue = 50;
+
+    [Header("Shield Settings")]
+    [SerializeField] private bool hasShield = false;
+    [SerializeField] private float frontDamageMultiplier = 0.3f; // 30% damage from front
 
     [Header("Death VFX")]
     [SerializeField] private GameObject deathVFXPrefab;
@@ -40,8 +45,19 @@ public class EnemyHealth : MonoBehaviour, IPoolable
         currentHealth = startingHealth;
     }
 
-    public bool TakeDamage(int damage)
+    public bool TakeDamage(int damage, Vector3 hitDirection)
     {
+        if (hasShield)
+        {
+            float dot = Vector3.Dot(transform.forward, -hitDirection.normalized);
+
+            // if hit from front
+            if (dot > 0.5f)
+            {
+                damage = Mathf.RoundToInt(damage * frontDamageMultiplier);
+            }
+        }
+
         currentHealth -= damage;
 
         if (currentHealth <= 0)

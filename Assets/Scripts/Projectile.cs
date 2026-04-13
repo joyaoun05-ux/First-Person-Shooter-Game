@@ -11,6 +11,12 @@ public class Projectile : MonoBehaviour, IPoolable
     private float returnTime;
     private bool alive;
     private Action<Projectile> returnAction;
+    private Rigidbody rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     public void Fire(int damage, Action<Projectile> returnAction)
     {
@@ -18,13 +24,16 @@ public class Projectile : MonoBehaviour, IPoolable
         this.returnAction = returnAction;
         returnTime = Time.time + lifetime;
         alive = true;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = transform.forward * speed;
+        }
     }
 
     private void Update()
     {
         if (!alive) return;
-
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
 
         if (Time.time >= returnTime)
             Return();
@@ -34,9 +43,12 @@ public class Projectile : MonoBehaviour, IPoolable
     {
         if (!alive) return;
 
-        var health = other.GetComponentInParent<EnemyHealth>();
+        EnemyHealth health = other.GetComponentInParent<EnemyHealth>();
         if (health != null)
-            health.TakeDamage(damage);
+        {
+            Vector3 hitDirection = transform.forward;
+            health.TakeDamage(damage, hitDirection);
+        }
 
         Return();
     }
@@ -44,13 +56,27 @@ public class Projectile : MonoBehaviour, IPoolable
     private void Return()
     {
         if (!alive) return;
+
         alive = false;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
         returnAction?.Invoke(this);
     }
 
     public void OnGetFromPool()
     {
         alive = false;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
     }
 
     public void OnReturnFromPool()
